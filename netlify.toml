@@ -11,7 +11,12 @@
 
 [context.deploy-preview]
   command = "make build"
-  
+
+[[redirects]]
+  from = "https://stwa.netlify.com/*"
+  to = "https://stwa.locher.at/:splat"
+  status = 301!
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
