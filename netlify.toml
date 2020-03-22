@@ -8,13 +8,9 @@
 
 [context.production]
   command = "make build"
-[context.production.environment]
-  NODE_ENV = "production"
 
 [context.deploy-preview]
   command = "make build"
-[context.deploy-preview.environment]
-  NODE_ENV = "production"
   
 [[redirects]]
   from = "/api/*"
