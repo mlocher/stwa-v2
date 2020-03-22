@@ -1,0 +1,28 @@
+[build]
+  base = "."
+  publish = "./dist/"
+  command = "make build"
+  functions = "./functions/dist/"
+[build.environment]  
+  GO_IMPORT_PATH = "github.com/mlocher/stwa-v2"
+
+[context.production]
+  command = "make build"
+[context.production.environment]
+  NODE_ENV = "production"
+
+[context.deploy-preview]
+  command = "make build"
+[context.deploy-preview.environment]
+  NODE_ENV = "production"
+  
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+[[headers]]
+  for = "/*"
+    
+    [headers.values]
+    Access-Control-Allow-Origin = "*"
