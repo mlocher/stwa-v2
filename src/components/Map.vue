@@ -76,7 +76,7 @@ export default {
                 },
                 'paint': {
                     'circle-color': ['case',
-                        ['==', ['get', 'state'], 'standby'], '#0e9f6e',
+                        ['==', ['get', 'state'], 'standby'], '#bcf0da',
                         ['==', ['get', 'state'], 'advance_warning'], '#faca15',
                         ['==', ['get', 'state'], 'gale_warning'], '#f05252',
                         ['==', ['get', 'state'], 'out_of_order'], '#c3ddfd',
