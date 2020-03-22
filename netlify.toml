@@ -15,7 +15,7 @@
 [[redirects]]
   from = "https://stwa.netlify.com/*"
   to = "https://stwa.locher.at/:splat"
-  status = 301!
+  status = 301
 
 [[redirects]]
   from = "/api/*"
