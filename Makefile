@@ -5,16 +5,18 @@ SHELL := bash
 MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 
-.PHONY: clean serve functions build preview
+.PHONY: all clean serve functions build preview
+
+all: build
 
 clean:
 	rm -rf dist/*
 
-serve: 
+serve:
 	yarn serve
 
 functions:
-	cd functions; mkdir -p dist; go get ./...; go build -o dist/stwa ./...
+	$(MAKE) -C functions all
 
 build: clean functions
 	yarn build
