@@ -3,8 +3,8 @@
   publish = "./dist/"
   command = "make build"
   functions = "./functions/dist/"
-[build.environment]  
-  GO_IMPORT_PATH = "github.com/mlocher/stwa-v2"
+[build.environment]
+  GO_IMPORT_PATH = "github.com/mlocher/stwa-v2/functions"
 
 [context.production]
   command = "make build"
@@ -24,6 +24,6 @@
 
 [[headers]]
   for = "/*"
-    
+
     [headers.values]
     Access-Control-Allow-Origin = "*"
