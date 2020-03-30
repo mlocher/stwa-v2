@@ -16,7 +16,10 @@ serve:
 	yarn serve
 
 functions:
-	$(MAKE) -C functions all
+	# there is an issue with GOPATH if using the below command
+	#$(MAKE) -C functions all
+	cd functions; mkdir -p dist; go get ./...; go build -o dist/stwa ./...
+
 
 build: clean functions
 	yarn build
