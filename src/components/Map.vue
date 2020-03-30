@@ -17,12 +17,6 @@ import markerGreen from '../assets/img/marker-stwa-green.svg'
 export default {
     name: 'stwaMap',
     props: ['stationData'],
-    data () {
-        return {
-            map: null,
-            stwaMarker: null
-        }
-    },
     watch: {
         stationData: function(data) {
             if (this.map.getSource('stwa')) {
@@ -36,6 +30,11 @@ export default {
             style: 'mapbox://styles/mapbox/light-v10',
             center: [16.7776, 47.8650],
             zoom: 10
+        });
+
+        this.popup = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false
         });
 
         this.map.on('load', () => {
@@ -98,9 +97,9 @@ export default {
                 'type': 'symbol',
                 'source': 'stwa',
                 'layout': {
-                    'icon-image': ['case', 
+                    'icon-image': ['case',
                         ['==', ['get', 'state'], 'standby'], 'stwaMarkerGreen',
-                        ['==', ['get', 'state'], 'advance_warning'], 'stwaMarkerLight',
+                        ['==', ['get', 'state'], 'advance_warning'], 'stwaMarkerDark',
                         ['==', ['get', 'state'], 'gale_warning'], 'stwaMarkerLight',
                         ['==', ['get', 'state'], 'out_of_order'], 'stwaMarkerDark',
                         'stwaMarkerDark'],
@@ -119,6 +118,34 @@ export default {
 
             this.$emit('map-loaded')
         });
+
+        this.map.on('mouseenter', 'stwa-marker', (e) => {
+            this.map.getCanvas().style.cursor = 'pointer'
+
+            var coordinates = e.features[0].geometry.coordinates.slice();
+            var name = e.features[0].properties.name;
+            var description = e.features[0].properties.description;
+
+            // Ensure that if the map is zoomed out such that multiple
+            // copies of the feature are visible, the popup appears
+            // over the copy being pointed to.
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }
+
+            this.popup
+                .setLngLat(coordinates)
+                .setHTML(`<div class="text-gray-500">
+                    <p class="text-gray-700 font-bold mb-2">STWA ${name}</p>
+                    <p class="leading-tight">${description}</p>
+                </div>`)
+                .addTo(this.map);
+        })
+
+        this.map.on('mouseleave', 'stwa-marker', () => {
+            this.map.getCanvas().style.cursor = '';
+            this.popup.remove();
+        })
     }
 }
 </script>

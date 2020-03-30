@@ -43,7 +43,16 @@
 
 <script>
 export default {
-    props: ['name', 'state', 'location', 'description', 'height'],
+    props: ['geometry', 'properties'],
+    data: function () {
+        return {
+            state: this.properties.state,
+            name: this.properties.name,
+            description: this.properties.description,
+            height: this.properties.height,
+            location: this.geometry.coordinates
+        }
+    },
     computed: {
         stateObject: function () {
             return {
