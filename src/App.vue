@@ -141,7 +141,7 @@ export default {
         },
         fetchStwaData: function () {
             this.stwa.isLoading = true
-            axios.get('at/api/stwa')
+            axios.get('/api/stwa')
                 .then(response => {
                     this.stwa.geoJSON = response.data
                 })
