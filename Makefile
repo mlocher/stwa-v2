@@ -20,6 +20,5 @@ functions:
 	#$(MAKE) -C functions all
 	cd functions; mkdir -p dist; go get ./...; go build -o dist/stwa ./...
 
-
 build: clean functions
 	yarn build
