@@ -11,8 +11,8 @@
                         </div>
                         <div class="hidden md:block">
                             <div class="ml-10 flex items-baseline">
-                                <a href="#map" v-on:click="navigateTo('map')" :class="{'text-white bg-gray-900': activeComponent =='map', 'text-gray-300 hover:text-white hover:bg-gray-700': activeComponent != 'map'}" class="px-3 py-2 rounded-md text-sm font-medium focus:outline-none focus:text-white focus:bg-gray-700">Karte</a>
-                                <a href="#list" v-on:click="navigateTo('list')" :class="{'text-white bg-gray-900': activeComponent =='list', 'text-gray-300 hover:text-white hover:bg-gray-700': activeComponent != 'list'}" class="ml-4 px-3 py-2 rounded-md text-sm font-medium focus:outline-none focus:text-white focus:bg-gray-700">Liste</a>
+                                <a href="#map" :class="{'text-white bg-gray-900': activeComponent =='#map', 'text-gray-300 hover:text-white hover:bg-gray-700': activeComponent != '#map'}" class="px-3 py-2 rounded-md text-sm font-medium focus:outline-none focus:text-white focus:bg-gray-700">Karte</a>
+                                <a href="#list" :class="{'text-white bg-gray-900': activeComponent =='#list', 'text-gray-300 hover:text-white hover:bg-gray-700': activeComponent != '#list'}" class="ml-4 px-3 py-2 rounded-md text-sm font-medium focus:outline-none focus:text-white focus:bg-gray-700">Liste</a>
                             </div>
                         </div>
                     </div>
@@ -52,8 +52,8 @@
             </div>
             <div :class="{'block': mobileMenuOpen, 'hidden': !mobileMenuOpen}" class="md:hidden">
                 <div class="px-2 pt-2 pb-3 sm:px-3">
-                    <a href="#map" v-on:click="navigateTo('map')" :class="{'text-white bg-gray-900': activeComponent =='map', 'text-gray-300 hover:text-white hover:bg-gray-700': activeComponent != 'map'}" class="block px-3 py-2 rounded-md text-base font-medium focus:outline-none focus:text-white focus:bg-gray-700">Karte</a>
-                    <a href="#list" v-on:click="navigateTo('list')" :class="{'text-white bg-gray-900': activeComponent =='list', 'text-gray-300 hover:text-white hover:bg-gray-700': activeComponent != 'list'}" class="mt-1 block px-3 py-2 rounded-md text-base font-medium focus:outline-none focus:text-white focus:bg-gray-700">Liste</a>
+                    <a href="#map" :class="{'text-white bg-gray-900': activeComponent =='#map', 'text-gray-300 hover:text-white hover:bg-gray-700': activeComponent != '#map'}" class="block px-3 py-2 rounded-md text-base font-medium focus:outline-none focus:text-white focus:bg-gray-700">Karte</a>
+                    <a href="#list" :class="{'text-white bg-gray-900': activeComponent =='#list', 'text-gray-300 hover:text-white hover:bg-gray-700': activeComponent != '#list'}" class="mt-1 block px-3 py-2 rounded-md text-base font-medium focus:outline-none focus:text-white focus:bg-gray-700">Liste</a>
                 </div>
                 <div class="pt-4 pb-3 border-t border-gray-700">
                     <div class="flex items-center px-5">
@@ -81,8 +81,8 @@
         <main>
             <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
                 <keep-alive>
-                    <Map v-if="activeComponent == 'map'" v-on:map-loaded="mapLoaded()" :stationData="stwa.geoJSON" />
-                    <StationList v-else-if="activeComponent == 'list'" v-on:data-refresh-requested="dataRefreshRequested()" :stationData="stwa.geoJSON" />
+                    <Map v-if="activeComponent == '#map'" v-on:map-loaded="mapLoaded()" :stationData="stwa.geoJSON" />
+                    <StationList v-else-if="activeComponent == '#list'" v-on:data-refresh-requested="dataRefreshRequested()" :stationData="stwa.geoJSON" />
                 </keep-alive>
             </div>
         </main>
@@ -105,7 +105,7 @@ export default {
         return {
             menuOpen: false,
             mobileMenuOpen: false,
-            activeComponent: 'map',
+            activeComponent: document.location.hash != '' ? document.location.hash : '#map',
             focused: false,
             stwa: {
                 geoJSON: {}
@@ -115,19 +115,21 @@ export default {
             autoRefreshIntervall: 15000
         }
     },
-    methods: {
-        navigateTo: function(target) {
-            switch (target) {
-            case 'map':
-                this.activeComponent = 'map'
-                break
-            case 'list':
-                this.activeComponent = 'list'
-                break
-            default:
-                this.activeComponent = 'map'
+    mounted () {
+        addEventListener('hashchange', (e) => {
+            switch (e.target.document.location.hash) {
+                case '#list':
+                    this.activeComponent = '#list'
+                    break
+                case '#map':
+                default:
+                    this.activeComponent = '#map'
+                    break
             }
-        },
+        })
+        addEventListener('map-loaded', this.mapLoaded())
+    },
+    methods: {
         toggleAutoRefresh: function () {
             this.autoRefresh = !this.autoRefresh
             if (this.autoRefresh) {
@@ -139,7 +141,7 @@ export default {
         },
         fetchStwaData: function () {
             this.stwa.isLoading = true
-            axios.get('/api/stwa')
+            axios.get('at/api/stwa')
                 .then(response => {
                     this.stwa.geoJSON = response.data
                 })
