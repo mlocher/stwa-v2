@@ -4,7 +4,7 @@
 
 <script>
 import mapboxgl from 'mapbox-gl'
-mapboxgl.accessToken = 'pk.eyJ1IjoibWxvY2hlciIsImEiOiJjazVmcG40dnowdGgyM2xtY3RxY2k3dm5oIn0.d13YAqiMPFPRtYBK7hJLSQ'
+mapboxgl.accessToken = process.env.VUE_APP_MAPBOX_TOKEN
 
 import resolveConfig from 'tailwindcss/resolveConfig'
 import tailwindConfig from '../../tailwind.config'
