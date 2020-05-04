@@ -40,9 +40,6 @@ export default {
                 .then(response => {
                     context.commit('setData', { data: response.data })
                 })
-                .catch(error => {
-                    console.log(error)
-                })
                 .finally(() => {
                     context.commit('endLoading')
                 })
