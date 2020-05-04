@@ -28,29 +28,23 @@
                                 </div>
                                 <div v-show="menuOpen" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg">
                                     <div class="py-1 rounded-md bg-white shadow-xs">
-                                        <div class="flex justify-between block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                            <span>Auto Refresh?</span>
-                                            <span class="relative inline-flex items-center justify-center flex-shrink-0 h-5 w-10 cursor-pointer focus:outline-none" role="checkbox" tabindex="0" v-on:click="toggleAutoRefresh()" v-on:keydown.space.prevent="toggleAutoRefresh()" :aria-checked="autoRefresh.toString()">
-                                                <span aria-hidden="true" :class="{ 'bg-indigo-600': autoRefresh, 'bg-gray-200': !autoRefresh }" class="absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200"></span>
-                                                <span aria-hidden="true" :class="{ 'translate-x-5': autoRefresh, 'translate-x-0': !autoRefresh, 'shadow-outline border-blue-300': autoRefreshFocused }" class="absolute left-0 inline-block h-5 w-5 border border-gray-200 rounded-full bg-white shadow transform transition-transform ease-in-out duration-200"></span>
-                                            </span>
-                                        </div>
+                                        <AutoRefresh />
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="-mr-2 flex md:hidden">
-                        <button @click="mobileMenuOpen = !mobileMenuOpen" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white">
+                        <button @click="menuOpen = !menuOpen" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white">
                             <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                                <path :class="{'hidden': mobileMenuOpen, 'inline-flex': !mobileMenuOpen }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                                <path :class="{'hidden': !mobileMenuOpen, 'inline-flex': mobileMenuOpen }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                <path :class="{'hidden': menuOpen, 'inline-flex': !menuOpen }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                                <path :class="{'hidden': !menuOpen, 'inline-flex': menuOpen }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
                     </div>
                 </div>
             </div>
-            <div :class="{'block': mobileMenuOpen, 'hidden': !mobileMenuOpen}" class="md:hidden">
+            <div :class="{'block': menuOpen, 'hidden': !menuOpen}" class="md:hidden">
                 <div class="px-2 pt-2 pb-3 sm:px-3">
                     <a href="#map" :class="{'text-white bg-gray-900': activeComponent =='#map', 'text-gray-300 hover:text-white hover:bg-gray-700': activeComponent != '#map'}" class="block px-3 py-2 rounded-md text-base font-medium focus:outline-none focus:text-white focus:bg-gray-700">Karte</a>
                     <a href="#list" :class="{'text-white bg-gray-900': activeComponent =='#list', 'text-gray-300 hover:text-white hover:bg-gray-700': activeComponent != '#list'}" class="mt-1 block px-3 py-2 rounded-md text-base font-medium focus:outline-none focus:text-white focus:bg-gray-700">Liste</a>
@@ -67,22 +61,17 @@
                         </div>
                     </div>
                     <div class="mt-3 px-2">
-                        <div class="flex justify-between block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700">
-                            <span>Auto Refresh?</span>
-                            <span class="relative inline-flex items-center justify-center flex-shrink-0 h-5 w-10 cursor-pointer focus:outline-none" role="checkbox" tabindex="0" v-on:click="toggleAutoRefresh()" v-on:keydown.space.prevent="toggleAutoRefresh()" :aria-checked="autoRefresh.toString()">
-                                <span aria-hidden="true" :class="{ 'bg-indigo-600': autoRefresh, 'bg-gray-200': !autoRefresh }" class="absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200"></span>
-                                <span aria-hidden="true" :class="{ 'translate-x-5': autoRefresh, 'translate-x-0': !autoRefresh, 'shadow-outline border-blue-300': autoRefreshFocused }" class="absolute left-0 inline-block h-5 w-5 border border-gray-200 rounded-full bg-white shadow transform transition-transform ease-in-out duration-200"></span>
-                            </span>
-                        </div>
+                        <AutoRefresh />
                     </div>
                 </div>
             </div>
         </nav>
         <main>
             <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+                <STWAData />
                 <keep-alive>
-                    <Map v-if="activeComponent == '#map'" v-on:map-loaded="mapLoaded()" :stationData="stwa.geoJSON" />
-                    <StationList v-else-if="activeComponent == '#list'" v-on:data-refresh-requested="dataRefreshRequested()" :stationData="stwa.geoJSON" />
+                    <Map v-if="activeComponent == '#map'" />
+                    <List v-else-if="activeComponent == '#list'" />
                 </keep-alive>
             </div>
         </main>
@@ -90,34 +79,28 @@
 </template>
 
 <script>
-import axios from 'axios'
-
-import StationList from './components/StationList.vue'
-import Map from './components/Map.vue'
+import AutoRefresh from './components/AutoRefresh'
+import Map from './components/Map'
+import List from './components/List'
+import STWAData from './components/stwa/Data'
 
 export default {
     name: 'stwaApp',
     components: {
+        AutoRefresh,
         Map,
-        StationList,
+        List,
+        STWAData,
     },
     data () {
         return {
             menuOpen: false,
-            mobileMenuOpen: false,
             activeComponent: document.location.hash != '' ? document.location.hash : '#map',
-            focused: false,
-            stwa: {
-                geoJSON: {}
-            },
-            autoRefresh: true,
-            autoRefreshFocused: false,
-            autoRefreshIntervall: 15000
         }
     },
     mounted () {
-        addEventListener('hashchange', (e) => {
-            switch (e.target.document.location.hash) {
+        addEventListener('hashchange', (event) => {
+            switch (event.target.document.location.hash) {
                 case '#list':
                     this.activeComponent = '#list'
                     break
@@ -127,41 +110,6 @@ export default {
                     break
             }
         })
-        addEventListener('map-loaded', this.mapLoaded())
-    },
-    methods: {
-        toggleAutoRefresh: function () {
-            this.autoRefresh = !this.autoRefresh
-            if (this.autoRefresh) {
-                this.fetchStwaData()
-                this.autoRefreshID = setInterval(this.fetchStwaData, this.autoRefreshIntervall)
-            } else {
-                clearInterval(this.autoRefreshID)
-            }
-        },
-        fetchStwaData: function () {
-            this.stwa.isLoading = true
-            axios.get(process.env.VUE_APP_API_URL)
-                .then(response => {
-                    this.stwa.geoJSON = response.data
-                })
-                .catch(error => {
-                    this.stwa.isError = true
-                    this.stwa.error = error
-                })
-                .finally(() => {
-                    this.stwa.isLoading = false
-                })
-        },
-        mapLoaded: function () {
-            this.fetchStwaData()
-            if (this.autoRefresh) {
-                this.autoRefreshID = setInterval(this.fetchStwaData, this.autoRefreshIntervall)
-            }
-        },
-        dataRefreshRequested: function () {
-            this.fetchStwaData()
-        }
     }
 }
 </script>
