@@ -1,8 +1,8 @@
 <template>
-    <div v-if="Object.keys(stationData).length != 0" class="bg-white shadow overflow-hidden sm:rounded-md">
-        <ul v-for="station in stationData.features" :key="station.properties.name">
+    <div v-if="stwaData && Object.keys(stwaData).length != 0" class="bg-white shadow overflow-hidden sm:rounded-md">
+        <ul v-for="station in stwaData.features" :key="station.properties.name" class="divide-y divide-gray-200">
             <li class="block hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition duration-150 ease-in-out">
-                <StationDetails v-bind="station" />
+                <stwaListItem v-bind="station" />
             </li>
         </ul>
     </div>
@@ -27,7 +27,7 @@
             </div>
             <div class="mt-5 sm:mt-6">
                 <span class="flex w-full rounded-md shadow-sm">
-                    <button @click="this.$emit('data-refresh-requested')" type="button" class="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-gray-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-gray-500 focus:outline-none focus:border-gray-700 focus:shadow-outline-gray transition ease-in-out duration-150 sm:text-sm sm:leading-5">
+                    <button @click="this.$store.dispatch('autorefresh/refresh')" type="button" class="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-gray-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-gray-500 focus:outline-none focus:border-gray-700 focus:shadow-outline-gray transition ease-in-out duration-150 sm:text-sm sm:leading-5">
                         Daten laden...
                     </button>
                 </span>
@@ -37,13 +37,18 @@
 </template>
 
 <script>
-import StationDetails from './StationDetails.vue'
+import stwaListItem from './stwa/ListItem'
 
 export default {
+    name: 'stwaList',
     components: {
-        StationDetails
+        stwaListItem
     },
-    props: ['stationData']
+    computed: {
+        stwaData () {
+            return this.$store.getters['stwa/data']
+        }
+    },
 }
 </script>
 

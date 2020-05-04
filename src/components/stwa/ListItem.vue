@@ -1,18 +1,14 @@
 <template>
     <div class="flex items-center px-4 py-4 sm:px-6">
         <div class="min-w-0 flex-1 flex items-center">
-            <div class="flex-shrink-0 h-12 w-12 rounded-full" v-bind:class='stateObject'>
-                <svg class="h-8 w-8 m-2" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z"></path>
-                </svg>
-            </div>
+            <icon v-bind="properties" />
             <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-3 md:gap-4">
                 <div>
                     <div class="text-sm leading-5 font-medium text-gray-800 truncate">
                         {{ name }}
                     </div>
                     <div class="mt-2 flex items-center text-sm leading-5 text-gray-500">
-                        ({{ stateLabel }})
+                        ({{ this.$store.getters['stwa/label'](state) }})
                     </div>
                 </div>
                 <div class="hidden md:block col-span-2">
@@ -42,7 +38,13 @@
 </template>
 
 <script>
+import icon from './Icon'
+
 export default {
+    name: 'list',
+    components: {
+        icon
+    },
     props: ['geometry', 'properties'],
     data: function () {
         return {
@@ -52,28 +54,6 @@ export default {
             height: this.properties.height,
             location: this.geometry.coordinates
         }
-    },
-    computed: {
-        stateObject: function () {
-            return {
-                'bg-gray-200 text-green-500': this.state == "standby",
-                'bg-yellow-300 text-gray-500': this.state == "advance_warning",
-                'bg-red-500 text-gray-200': this.state == "gale_warning",
-                'bg-blue-200 text-gray-500': this.state == "out_of_order",
-                'bg-gray-200 text-gray-500': this.state == "unknown"
-            }
-        },
-        stateLabel: function () {
-            var mapping = {
-                standby: 'Bereitschaft',
-                advance_warning: 'Vorwarnung',
-                gale_warning: 'Sturmwarnung',
-                out_of_order: 'Außer Betrieb',
-                unknown: 'Unbekannt'
-            }
-            return mapping[this.state] || mapping['unknown']
-        }
-
     }
 }
 </script>
