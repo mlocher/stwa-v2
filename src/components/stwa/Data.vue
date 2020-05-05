@@ -55,7 +55,7 @@ export default {
                 type: 'symbol',
                 source: 'stwa',
                 layout: {
-                    'icon-image': 'stwa-11',
+                    'icon-image': 'stwa-15',
                     'icon-allow-overlap': true,
                     'icon-ignore-placement': true,
                     'text-field': ['get', 'name'],
@@ -131,9 +131,9 @@ export default {
         this.$root.$on('map-loaded', () => {
             let map = this.$store.map
 
-            map.loadImage('/img/marker/stwa-11.png', (error, image) => {
+            map.loadImage('/img/marker/stwa-15.png', (error, image) => {
                 if (error) throw error
-                map.addImage('stwa-11', image)
+                map.addImage('stwa-15', image)
 
                 this.initLayer()
                 this.initPopups()
