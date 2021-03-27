@@ -11,11 +11,7 @@ module.exports = {
     variants: {},
     plugins: [
         require('@tailwindcss/typography'),
-        require('@tailwindcss/ui'),
+        require('@tailwindcss/forms'),
     ],
-    future: {
-        removeDeprecatedGapUtilities: true,
-    },
     purge: false
-
 }

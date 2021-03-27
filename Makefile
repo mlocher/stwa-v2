@@ -13,7 +13,7 @@ clean:
 	rm -rf dist/*
 
 serve:
-	yarn serve
+	npm run serve
 
 functions:
 	# there is an issue with GOPATH if using the below command
@@ -21,4 +21,4 @@ functions:
 	cd functions; mkdir -p dist; go get ./...; go build -o dist/stwa ./...
 
 build: clean functions
-	yarn build
+	npm run build
